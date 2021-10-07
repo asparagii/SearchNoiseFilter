@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <title>Search Noise Filter - Settings</title>
+<style>
+    :root {
+        --bg-color: #EFF1F3;
+        --text-color: #272727;
+        --highlight-a: #FED766;
+        --highlight-b: #009FB7;
+        --gray: #696773;
+    }
+
+    body {
+        margin: 0 0;
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        display: flex;
+        min-height: 100vh;
+    }
+
+    main {
+        border: var(--gray);
+        width: 500px;
+        margin: auto auto;
+        padding: 0 30px;
+        background-color: var(--bg-color);
+    }
+
+    textarea {
+        width: 100%;
+    }
+
+    div.controls {
+        display: flex;
+        margin: 0.83em 0;
+        column-gap: 10px;
+    }
+</style>
+</head>
+
+<body>
+    <main>
+        <h1>Search Noise Filter - Settings</h1>
+        <h2>Filters</h2>
+        <textarea id="filterbody" rows="30" width="100%"></textarea>
+        <div class="controls">
+            <button id="save">Save</button>
+            <button id="reload">Reload</button>
+        </div>
+    </main>
+    <script src="options.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,15 @@
+{
+    "name": "Search Noise Filter",
+    "description": "Filter google search results",
+    "version": "1.0",
+    "manifest_version": 3,
+    "options_page": "options.html",
+    "permissions": [
+        "storage"
+    ],
+    "content_scripts": [{
+        "matches": [ "https://www.google.com/*" ],
+        "js": [ "run.js" ],
+        "css": [ "search-noise-filter.css" ]
+    }]
+}
