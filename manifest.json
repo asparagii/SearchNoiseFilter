@@ -4,12 +4,16 @@
     "version": "1.0",
     "manifest_version": 3,
     "options_page": "options.html",
+    "background": {
+        "service_worker": "background.js"
+    },
     "permissions": [
-        "storage"
+        "storage",
+        "contextMenus"
     ],
     "content_scripts": [{
         "matches": [ "https://www.google.com/*" ],
-        "js": [ "run.js" ],
+        "js": [ "common.js", "run.js" ],
         "css": [ "search-noise-filter.css" ]
     }]
 }

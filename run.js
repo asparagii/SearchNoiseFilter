@@ -1,59 +1,11 @@
-
-let filters = [];
-const getFilters = (cb) => {
-    chrome.storage.sync.get('filter-list', (data) => {
-        if (data['filter-list']) {
-            filters = data['filter-list'];
-        } else {
-            setFilters();
-        }
-        cb();
-    });
-}
-
-let setFilters = () => {
-    chrome.storage.sync.set({'filter-list': filters});
-}
-
-let addFilter = (filter) => {
-    filters.push(filter);
-    applyStyle();
-    setFilters();
-}
-
-let removeFilter = (filter) => {
-    const index = filters.indexOf(filter);
-    if (index != -1) {
-        filters.splice(index, 1);
-        applyStyle();
-        setFilters();
-    }
-}
-
-/**
- * @param { HTMLAnchorElement } node
- * @param { string } filter
- */
-function checkFilter(node, filter) {
-    if (filter.startsWith('#')) {
-        // ignore comments
-        return false;
-    } else if (filter.startsWith('=')) {
-        return node.hostname.includes(filter.slice(1));
-    } else if (filter.startsWith('~')) {
-        const re = new RegExp(filter.slice(1), "gi");
-        return re.test(node.href);
-    }
-}
-
-let applyStyle = () => {
+let applyStyle = (filters) => {
     const links = document.querySelectorAll(
         "div#search .g > div > div > div > a"
     );
     links.forEach(node => {
         let filtered = false;
         for (filter of filters) {
-            if (checkFilter(node, filter)) {
+            if (checkFilter(node.href, filter)) {
                 filtered = true;
                 break;
             }
@@ -64,19 +16,6 @@ let applyStyle = () => {
         } else {
             node.parentNode.parentNode.classList.remove("extra-search-red");
         }
-
-        if (!filtered) {
-            let btn = node.parentNode.querySelector(".extra-search-add-filter");
-            if (!btn) {
-                const addFilterBtn = document.createElement("div");
-                addFilterBtn.classList.add("extra-search-add-filter");
-                node.parentNode.appendChild(addFilterBtn);
-                btn = addFilterBtn;
-            }
-
-            btn.innerHTML = "ADD FILTER";
-            btn.onclick = () => {addFilter('=' + node.hostname)};
-        }
     });
 }
 
@@ -85,4 +24,10 @@ const init = () => {
 }
 
 document.addEventListener("PageReadyCustomEv", init);
+chrome.storage.onChanged.addListener((changes, area) => {
+    if(area != 'sync') return;
+    if(changes['filter-list']){
+        getFilters(applyStyle);
+    }
+});
 document.dispatchEvent(new CustomEvent('PageReadyCustomEv'));
