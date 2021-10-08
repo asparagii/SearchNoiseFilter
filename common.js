@@ -1,6 +1,6 @@
 
 /**
- * @param { CallableFunction? } callback
+ * @param { (fs: string[]) => void? } callback
  */
 function getFilters(callback) {
     chrome.storage.sync.get('filter-list', (data) => {
@@ -14,7 +14,7 @@ function getFilters(callback) {
 
 /**
  * @param { string } href
- * @param { CallableFunction? } callback
+ * @param { () => void? } callback
  */
 function addFilter(href, callback) {
     try {
@@ -35,6 +35,10 @@ function addFilter(href, callback) {
     }
 }
 
+/**
+ * @param { string[] } filters
+ * @param { () => unknown? } callback
+ */
 function setFilters(filters, callback) {
     chrome.storage.sync.set({'filter-list': filters}, callback);
 }
@@ -55,6 +59,27 @@ function checkFilter(url, filter) {
     }
 }
 
+/**
+ * @param { string } url
+ * @param { (filtered: boolean) => unknown } callback
+ */
+function check(url, callback) {
+    getFilters(fs => {
+        let filtered = false;
+        for(const f of fs){
+            if(checkFilter(url, f)){
+                filtered = true;
+                break;
+            }
+        }
+        callback(filtered);
+    });
+}
+
+/**
+ * @param { string[] } filters
+ * @param { () => unknown? } callback
+ */
 function removeFilters(filters, callback) {
     getFilters(fs => {
         for (const filter of filters) {
@@ -67,6 +92,11 @@ function removeFilters(filters, callback) {
     })
 }
 
+/**
+ * @param { string } url
+ * @param { string[] } filters
+ * @return { string[] } all filters in `filters` matching `url`
+ */
 function getMatchingFilters(url, filters) {
     const matchingFilters = [];
     for (const filter of filters) {
@@ -79,7 +109,7 @@ function getMatchingFilters(url, filters) {
 
 /**
  * @param { string } url
- * @param { CallableFunction? } callback
+ * @param { () => unknown? } callback
  */
 function removeMatchingFilters(url, callback) {
     getFilters(fs => {

@@ -13,7 +13,11 @@
     ],
     "content_scripts": [{
         "matches": [ "https://www.google.com/*" ],
-        "js": [ "common.js", "run.js" ],
+        "js": [ "common.js", "all-page-run.js", "run.js" ],
+        "css": [ "search-noise-filter.css" ]
+    }, {
+        "matches": [ "https://*/*", "http://*/*" ],
+        "js": [ "common.js", "all-page-run.js" ],
         "css": [ "search-noise-filter.css" ]
     }]
 }
