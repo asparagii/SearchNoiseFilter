@@ -19,5 +19,8 @@
         "matches": [ "https://*/*", "http://*/*" ],
         "js": [ "common.js", "all-page-run.js" ],
         "css": [ "search-noise-filter.css" ]
-    }]
+    }],
+    "icons": {
+        "128": "128.png"
+    }
 }
